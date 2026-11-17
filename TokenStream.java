@@ -16,7 +16,7 @@ public class TokenStream {
 	// READ THE COMPLETE FILE FIRST
 	// You will need to adapt it to KAY, NOT JAY
 
-	// Instance variables
+	// Instance variables 
 	private boolean isEof = false; // is end of file
 	private char nextChar = ' '; // next character in input stream
 	private BufferedReader input;
@@ -77,52 +77,52 @@ public class TokenStream {
 			t.setType("Operator");
 			t.setValue(t.getValue() + nextChar);
 			switch (nextChar) {
-				// TODO TO BE COMPLETED WHERE NEEDED
-				case '<':
-					// <=
-				case '>':
-					// >=
-				case '=':
-					// ==
-				case '!':
-					// !=
+			case '<': // < or <=
+			case '>': // > or >=
+			case '=': // = or ==
+			case '!': // ! or !=
+				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+				}
+				return t;
+			case '|':
+				// Look for ||
+				nextChar = readChar();
+				if (nextChar == '|') {
+					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
 					return t;
-				case '|':
-					// Look for ||
-					nextChar = readChar();
-					if (nextChar == '|') {
-						t.setValue(t.getValue() + nextChar);
-						nextChar = readChar();
-						return t;
-					} else {
-						t.setType("Other");
-					}
-					return t;
+				} else {
+					t.setType("Other");
+				}
+				return t;
 
-				case '&':
-					// Look or &&
-					nextChar = readChar();
-					if (nextChar == '&') {
-						t.setValue(t.getValue() + nextChar);
-						nextChar = readChar();
-						return t;
-					} else {
-						t.setType("Other");
-					}
-
-					return t;
-
-				default: // all other operators
+			case '&':
+				// Look or &&
+				nextChar = readChar();
+				if (nextChar == '&') {
+					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
 					return t;
+				} else {
+					t.setType("Other");
+				}
+
+				return t;
+
+			default: // all other operators
+				nextChar = readChar();
+				return t;
 			}
 		}
 
 		// Then check for a separator
 		if (isSeparator(nextChar)) {
 			t.setType("Separator");
-			// TODO TO BE COMPLETED
+			t.setValue(t.getValue() + nextChar);
+			nextChar = readChar();
 			return t;
 		}
 
@@ -155,11 +155,11 @@ public class TokenStream {
 			// an operator, or a separator.
 			if (isEndOfToken(nextChar)) {// If token is valid, returns.
 				return t;
-			}
+			} 
 		}
 
 		t.setType("Other");
-
+		
 		if (isEof) {
 			return t;
 		}
@@ -169,7 +169,7 @@ public class TokenStream {
 			t.setValue(t.getValue() + nextChar);
 			nextChar = readChar();
 		}
-
+		
 		// Finally check for whitespaces and bypass them
 		skipWhiteSpace();
 
