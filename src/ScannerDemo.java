@@ -2,10 +2,10 @@
 /**
  * @author scharffc
  * 
- *         Prints every token of a JAY file in the required format:
- *         Token 1 - Type: Literal - Value: 31
+ * Prints every token of a JAY file in the required format:
+ * Token 1 - Type: Literal - Value: 31
  *
- *         Usage: java ScannerDemo [file.jay] (defaults to prog1.jay)
+ * Usage: java ScannerDemo [file.jay]   (defaults to prog1.jay)
  */
 public class ScannerDemo {
 
