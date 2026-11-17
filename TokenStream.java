@@ -16,7 +16,7 @@ public class TokenStream {
 	// READ THE COMPLETE FILE FIRST
 	// You will need to adapt it to KAY, NOT JAY
 
-	// Instance variables 
+	// Instance variables
 	private boolean isEof = false; // is end of file
 	private char nextChar = ' '; // next character in input stream
 	private BufferedReader input;
@@ -56,9 +56,13 @@ public class TokenStream {
 			nextChar = readChar();
 			if (nextChar == '/') { // If / is followed by another /
 				// skip rest of line - it's a comment.
-				// TODO TO BE COMPLETED
-				// look for <cr>, <lf>, <ff>
-
+				// look for <cr>, <lf>, <ff> (or the end of the file)
+				while (!isEof && !isEndOfLine(nextChar)) {
+					nextChar = readChar();
+				}
+				// skip the line break and any blank lines/indentation, so the
+				// while loop can also catch a comment on the next line
+				skipWhiteSpace();
 			} else {
 				// A slash followed by anything else must be an operator.
 				t.setValue("/");
@@ -73,45 +77,45 @@ public class TokenStream {
 			t.setType("Operator");
 			t.setValue(t.getValue() + nextChar);
 			switch (nextChar) {
-			// TODO TO BE COMPLETED WHERE NEEDED
-			case '<':
-				// <=
-			case '>':
-				// >=
-			case '=':
-				// ==
-			case '!':
-				// !=
-				nextChar = readChar();
-				return t;
-			case '|':
-				// Look for ||
-				nextChar = readChar();
-				if (nextChar == '|') {
-					t.setValue(t.getValue() + nextChar);
+				// TODO TO BE COMPLETED WHERE NEEDED
+				case '<':
+					// <=
+				case '>':
+					// >=
+				case '=':
+					// ==
+				case '!':
+					// !=
 					nextChar = readChar();
 					return t;
-				} else {
-					t.setType("Other");
-				}
-				return t;
+				case '|':
+					// Look for ||
+					nextChar = readChar();
+					if (nextChar == '|') {
+						t.setValue(t.getValue() + nextChar);
+						nextChar = readChar();
+						return t;
+					} else {
+						t.setType("Other");
+					}
+					return t;
 
-			case '&':
-				// Look or &&
-				nextChar = readChar();
-				if (nextChar == '&') {
-					t.setValue(t.getValue() + nextChar);
+				case '&':
+					// Look or &&
+					nextChar = readChar();
+					if (nextChar == '&') {
+						t.setValue(t.getValue() + nextChar);
+						nextChar = readChar();
+						return t;
+					} else {
+						t.setType("Other");
+					}
+
+					return t;
+
+				default: // all other operators
 					nextChar = readChar();
 					return t;
-				} else {
-					t.setType("Other");
-				}
-
-				return t;
-
-			default: // all other operators
-				nextChar = readChar();
-				return t;
 			}
 		}
 
@@ -151,11 +155,11 @@ public class TokenStream {
 			// an operator, or a separator.
 			if (isEndOfToken(nextChar)) {// If token is valid, returns.
 				return t;
-			} 
+			}
 		}
 
 		t.setType("Other");
-		
+
 		if (isEof) {
 			return t;
 		}
@@ -165,7 +169,7 @@ public class TokenStream {
 			t.setValue(t.getValue() + nextChar);
 			nextChar = readChar();
 		}
-		
+
 		// Finally check for whitespaces and bypass them
 		skipWhiteSpace();
 
