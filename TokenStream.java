@@ -190,8 +190,10 @@ public class TokenStream {
 	}
 
 	private boolean isKeyword(String s) {
-		// TODO TO BE COMPLETED 
-		return false;
+		// JAY keywords (case-sensitive): boolean else if int main void while
+		return s.equals("boolean") || s.equals("else") || s.equals("if")
+				|| s.equals("int") || s.equals("main") || s.equals("void")
+				|| s.equals("while");
 	}
 
 	private boolean isWhiteSpace(char c) {
@@ -214,14 +216,15 @@ public class TokenStream {
 	}
 
 	private boolean isSeparator(char c) {
-		// TODO TO BE COMPLETED
-		return false;
+		// JAY separators: ( ) { } ; ,
+		return c == '(' || c == ')' || c == '{' || c == '}' || c == ';' || c == ',';
 	}
 
 	private boolean isOperator(char c) {
 		// Checks for characters that start operators
-		// TODO TO BE COMPLETED
-		return false;
+		// JAY operators: = + - * / < <= > >= == != && || !
+		return c == '=' || c == '+' || c == '-' || c == '*' || c == '/'
+				|| c == '<' || c == '>' || c == '!' || c == '&' || c == '|';
 	}
 
 	private boolean isLetter(char c) {
@@ -229,8 +232,7 @@ public class TokenStream {
 	}
 
 	private boolean isDigit(char c) {
-		// TODO TO BE COMPLETED
-		return false;
+		return (c >= '0' && c <= '9');
 	}
 
 	public boolean isEndofFile() {
