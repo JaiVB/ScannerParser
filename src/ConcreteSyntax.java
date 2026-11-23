@@ -12,7 +12,7 @@
 public class ConcreteSyntax {
 
 	// READ THE COMPLETE FILE FIRST
-
+	
 	// Instance variables
 	public Token token; // current token that is considered from the input stream
 	public TokenStream input; // stream of tokens generated in by the lexical analysis
@@ -47,7 +47,7 @@ public class ConcreteSyntax {
 		// Program --> void main ( ) '{' Declarations Statements '}'
 		// The grammar starts with "void main ( )", but the examples in the
 		// homework start with just "main {". Both forms are accepted:
-		// void main ( ) { or main {
+		//   void main ( ) {        or        main {
 		Program p = new Program();
 		String[] header = { "void", "main", "(", ")", "{" };
 		if (!token.getValue().equals("void"))
@@ -133,12 +133,11 @@ public class ConcreteSyntax {
 			match("}");
 		} else if (token.getValue().equals("if")) // IfStatement
 			s = ifStatement();
-		else if (token.getValue().equals("while")) {
-			// WhileStatement
-			// TODO TO BE COMPLETED
-		} else if (token.getType().equals("Identifier")) { // Assignment
-			// TODO TO BE COMPLETED
-		} else
+		else if (token.getValue().equals("while")) // WhileStatement
+			s = whileStatement();
+		else if (token.getType().equals("Identifier")) // Assignment
+			s = assignment();
+		else
 			throw new RuntimeException(SyntaxError("Statement"));
 		return s;
 	}
@@ -155,10 +154,15 @@ public class ConcreteSyntax {
 	}
 
 	private Assignment assignment() {
-		// Assignment --> Identifier := Expression ;
+		// Assignment --> Identifier = Expression ;
 		Assignment a = new Assignment();
 		if (token.getType().equals("Identifier")) {
-			// TODO TO BE COMPLETED
+			a.target = new Variable(); // the variable on the left
+			a.target.id = token.getValue();
+			token = input.nextToken();
+			match("="); // JAY uses = (not :=)
+			a.source = expression(); // the value on the right
+			match(";");
 		} else
 			throw new RuntimeException(SyntaxError("Identifier"));
 		return a;
@@ -286,7 +290,11 @@ public class ConcreteSyntax {
 	private Loop whileStatement() {
 		// WhileStatement --> while ( Expression ) Statement
 		Loop l = new Loop();
-		// TODO TO BE COMPLETED
+		match("while");
+		match("(");
+		l.test = expression();
+		match(")");
+		l.body = statement();
 		return l;
 	}
 
