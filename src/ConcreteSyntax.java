@@ -12,7 +12,7 @@
 public class ConcreteSyntax {
 
 	// READ THE COMPLETE FILE FIRST
-	
+
 	// Instance variables
 	public Token token; // current token that is considered from the input stream
 	public TokenStream input; // stream of tokens generated in by the lexical analysis
@@ -47,7 +47,7 @@ public class ConcreteSyntax {
 		// Program --> void main ( ) '{' Declarations Statements '}'
 		// The grammar starts with "void main ( )", but the examples in the
 		// homework start with just "main {". Both forms are accepted:
-		//   void main ( ) {        or        main {
+		// void main ( ) { or main {
 		Program p = new Program();
 		String[] header = { "void", "main", "(", ")", "{" };
 		if (!token.getValue().equals("void"))
@@ -283,7 +283,16 @@ public class ConcreteSyntax {
 	private Conditional ifStatement() {
 		// IfStatement --> if ( Expression ) Statement { else Statement }opt
 		Conditional c = new Conditional();
-		// TODO TO BE COMPLETED
+		match("if");
+		match("(");
+		c.test = expression();
+		match(")");
+		c.thenbranch = statement();
+		// the else part is optional; elsebranch stays null without it
+		if (token.getValue().equals("else")) {
+			token = input.nextToken();
+			c.elsebranch = statement();
+		}
 		return c;
 	}
 
