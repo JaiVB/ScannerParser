@@ -12,7 +12,7 @@
 public class ConcreteSyntax {
 
 	// READ THE COMPLETE FILE FIRST
-
+	
 	// Instance variables
 	public Token token; // current token that is considered from the input stream
 	public TokenStream input; // stream of tokens generated in by the lexical analysis
@@ -47,7 +47,7 @@ public class ConcreteSyntax {
 		// Program --> void main ( ) '{' Declarations Statements '}'
 		// The grammar starts with "void main ( )", but the examples in the
 		// homework start with just "main {". Both forms are accepted:
-		// void main ( ) { or main {
+		//   void main ( ) {        or        main {
 		Program p = new Program();
 		String[] header = { "void", "main", "(", ")", "{" };
 		if (!token.getValue().equals("void"))
@@ -191,24 +191,32 @@ public class ConcreteSyntax {
 		e = relation();
 		while (token.getValue().equals("&&")) {
 			b = new Binary();
-			// TODO TO BE COMPLETED
+			b.term1 = e; // left side: everything parsed so far
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = relation(); // right side
 			e = b;
 		}
 		return e;
 	}
 
 	private Expression relation() {
-		// Relation --> Addition [ < | <= | > | >= | == | <> ] Addition }*
+		// Relation --> Addition { [ < | <= | > | >= | == | != ] Addition }*
+		// JAY writes "not equal" as != (the starter code had <> and was
+		// missing >)
 		Binary b;
 		Expression e;
 		e = addition();
-		// TODO TO BE COMPLETED
 		while (token.getValue().equals("<") || token.getValue().equals("<=")
+				|| token.getValue().equals(">")
 				|| token.getValue().equals(">=")
 				|| token.getValue().equals("==")
-				|| token.getValue().equals("<>")) {
+				|| token.getValue().equals("!=")) {
 			b = new Binary();
-			// TODO TO BE COMPLETED
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = addition();
 			e = b;
 		}
 		return e;
