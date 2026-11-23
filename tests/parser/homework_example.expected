@@ -1,0 +1,7 @@
+Abstract syntax of the JAY Program: 
+  Declarations: 
+    Declarations = {<i, integer>}
+  Block: 
+    Assignment: 
+      Variable: i
+      Value: 7

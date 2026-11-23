@@ -1,0 +1,16 @@
+void main ( ) {
+  int n, total;
+  boolean found;
+  ;
+  n = 10;
+  total = 0;
+  while (n > 0) {
+    total = total + n;
+    n = n - 1;
+  }
+  if (total >= 50) found = true; else found = false;
+  if (found) { ; } 
+  // dangling else: the else belongs to the closest if
+  if (n == 0) if (found) n = 1; else n = 2;
+  { { n = 3; } }
+}

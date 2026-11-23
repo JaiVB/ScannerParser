@@ -1,0 +1,62 @@
+Abstract syntax of the JAY Program: 
+  Declarations: 
+    Declarations = {<n, integer>, <total, integer>, <found, boolean>}
+  Block: 
+    Skip: 
+    Assignment: 
+      Variable: n
+      Value: 10
+    Assignment: 
+      Variable: total
+      Value: 0
+    Loop: 
+      Binary: 
+        Operator: >
+        Variable: n
+        Value: 0
+      Block: 
+        Assignment: 
+          Variable: total
+          Binary: 
+            Operator: +
+            Variable: total
+            Variable: n
+        Assignment: 
+          Variable: n
+          Binary: 
+            Operator: -
+            Variable: n
+            Value: 1
+    Conditional: 
+      Binary: 
+        Operator: >=
+        Variable: total
+        Value: 50
+      Assignment: 
+        Variable: found
+        Value: true
+      Assignment: 
+        Variable: found
+        Value: false
+    Conditional: 
+      Variable: found
+      Block: 
+        Skip: 
+    Conditional: 
+      Binary: 
+        Operator: ==
+        Variable: n
+        Value: 0
+      Conditional: 
+        Variable: found
+        Assignment: 
+          Variable: n
+          Value: 1
+        Assignment: 
+          Variable: n
+          Value: 2
+    Block: 
+      Block: 
+        Assignment: 
+          Variable: n
+          Value: 3

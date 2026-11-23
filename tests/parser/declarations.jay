@@ -1,0 +1,6 @@
+// several declarations, a comma list, both types, and a program with no statements
+main {
+  int a, b, c;
+  boolean done;
+  int x;
+}

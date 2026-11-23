@@ -1,0 +1,3 @@
+// no spaces, comments and Windows line endings
+main{int x;x=1;while(x<10)x=x+1;// count
+if(x==10){x=0;}else;}
