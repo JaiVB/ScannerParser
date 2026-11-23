@@ -12,7 +12,7 @@
 public class ConcreteSyntax {
 
 	// READ THE COMPLETE FILE FIRST
-	
+
 	// Instance variables
 	public Token token; // current token that is considered from the input stream
 	public TokenStream input; // stream of tokens generated in by the lexical analysis
@@ -44,22 +44,32 @@ public class ConcreteSyntax {
 	// Implementation of the Recursive Descent Parser
 
 	public Program program() {
-		// TODO TO BE COMPLETED 
-		// Program --> main '{' Declarations Statements '}'
-		String[] header = { };
+		// Program --> void main ( ) '{' Declarations Statements '}'
+		// The grammar starts with "void main ( )", but the examples in the
+		// homework start with just "main {". Both forms are accepted:
+		// void main ( ) { or main {
 		Program p = new Program();
+		String[] header = { "void", "main", "(", ")", "{" };
+		if (!token.getValue().equals("void"))
+			header = new String[] { "main", "{" };
 		for (int i = 0; i < header.length; i++)
-			// bypass " main { "
 			match(header[i]);
+		p.decpart = declarations();
+		p.body = statements();
+		match("}");
+		// Nothing may follow the closing brace of the program
+		// (at the end of the file the scanner returns an empty token)
+		if (!token.getValue().equals(""))
+			throw new RuntimeException(SyntaxError("end of program"));
 		return p;
 	}
 
 	private Declarations declarations() {
-		// TODO TO BE COMPLETED 
 		// Declarations --> { Declaration }*
 		Declarations ds = new Declarations();
+		// a declaration always starts with a type: int or boolean
 		while (token.getValue().equals("int")
-				|| token.getValue().equals("bool")) {
+				|| token.getValue().equals("boolean")) {
 			declaration(ds);
 		}
 		return ds;
@@ -73,13 +83,13 @@ public class ConcreteSyntax {
 	}
 
 	private Type type() {
-		// TODO TO BE COMPLETED
-		// Type --> integer | bool
+		// Type --> int | boolean
+		// The required output shows the type as "integer": <i, integer>
 		Type t = null;
 		if (token.getValue().equals("int"))
-			t = new Type(token.getValue());
-		else if (token.getValue().equals("bool"))
-			t = new Type(token.getValue());
+			t = new Type("integer");
+		else if (token.getValue().equals("boolean"))
+			t = new Type("boolean");
 		else
 			throw new RuntimeException(SyntaxError("int | boolean"));
 		token = input.nextToken(); // pass over the type
@@ -135,8 +145,10 @@ public class ConcreteSyntax {
 
 	private Block statements() {
 		// Block --> '{' Statements '}'
+		// Statements stop at "}" -- or at the end of the file (empty token),
+		// so a missing "}" is reported as "Expecting: }"
 		Block b = new Block();
-		while (!token.getValue().equals("}")) {
+		while (!token.getValue().equals("}") && !token.getValue().equals("")) {
 			b.blockmembers.addElement(statement());
 		}
 		return b;
