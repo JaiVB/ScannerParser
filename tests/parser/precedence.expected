@@ -1,0 +1,68 @@
+Abstract syntax of the JAY Program: 
+  Declarations: 
+    Declarations = {<x, integer>, <y, integer>, <b, boolean>}
+  Block: 
+    Assignment: 
+      Variable: x
+      Binary: 
+        Operator: +
+        Value: 1
+        Binary: 
+          Operator: *
+          Value: 2
+          Value: 3
+    Assignment: 
+      Variable: x
+      Binary: 
+        Operator: *
+        Binary: 
+          Operator: +
+          Value: 1
+          Value: 2
+        Value: 3
+    Assignment: 
+      Variable: x
+      Binary: 
+        Operator: -
+        Binary: 
+          Operator: -
+          Value: 10
+          Value: 4
+        Value: 3
+    Assignment: 
+      Variable: x
+      Binary: 
+        Operator: /
+        Binary: 
+          Operator: /
+          Value: 8
+          Value: 2
+        Value: 2
+    Assignment: 
+      Variable: b
+      Binary: 
+        Operator: ||
+        Binary: 
+          Operator: &&
+          Unary: 
+            Operator: !
+            Variable: b
+          Binary: 
+            Operator: <
+            Variable: x
+            Variable: y
+        Binary: 
+          Operator: !=
+          Variable: y
+          Value: 0
+    Assignment: 
+      Variable: b
+      Binary: 
+        Operator: ==
+        Unary: 
+          Operator: !
+          Binary: 
+            Operator: <=
+            Variable: x
+            Variable: y
+        Value: false

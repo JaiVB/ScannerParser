@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Compiles the project and runs every test in tests/.
 #   tests/scanner/X.jay + X.expected  -> one "Type Value" line per token
+#   tests/parser/X.jay  + X.expected  -> exact ParserDemo output (the tree, or
+#                                        the "Syntax error" line for a bad program)
 # Usage: ./run_tests.sh
 cd "$(dirname "$0")"
 unset JAVA_TOOL_OPTIONS
@@ -17,6 +19,14 @@ for f in tests/scanner/*.jay; do
   exp="${f%.jay}.expected"; [ -f "$exp" ] || continue
   java -cp build ScannerDemo "$f" | tail -n +2 \
     | sed -E 's/^Token [0-9]+ - Type: ([A-Za-z]+) - Value: (.*)$/\1 \2/' > build/actual.txt
+  check "$f" build/actual.txt "$exp"
+done
+
+for f in tests/parser/*.jay; do
+  exp="${f%.jay}.expected"; [ -f "$exp" ] || continue
+  # stdout only: for a syntax error that is the "Syntax error - ..." line
+  # (the Java stack trace goes to stderr and is not compared)
+  java -cp build ParserDemo "$f" > build/actual.txt 2>/dev/null
   check "$f" build/actual.txt "$exp"
 done
 
