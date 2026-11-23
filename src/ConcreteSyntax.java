@@ -12,7 +12,7 @@
 public class ConcreteSyntax {
 
 	// READ THE COMPLETE FILE FIRST
-	
+
 	// Instance variables
 	public Token token; // current token that is considered from the input stream
 	public TokenStream input; // stream of tokens generated in by the lexical analysis
@@ -47,7 +47,7 @@ public class ConcreteSyntax {
 		// Program --> void main ( ) '{' Declarations Statements '}'
 		// The grammar starts with "void main ( )", but the examples in the
 		// homework start with just "main {". Both forms are accepted:
-		//   void main ( ) {        or        main {
+		// void main ( ) { or main {
 		Program p = new Program();
 		String[] header = { "void", "main", "(", ")", "{" };
 		if (!token.getValue().equals("void"))
@@ -228,7 +228,12 @@ public class ConcreteSyntax {
 		Expression e;
 		e = term();
 		while (token.getValue().equals("+") || token.getValue().equals("-")) {
-			// TODO TO BE COMPLETED
+			b = new Binary();
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = term();
+			e = b;
 		}
 		return e;
 	}
@@ -240,7 +245,10 @@ public class ConcreteSyntax {
 		e = negation();
 		while (token.getValue().equals("*") || token.getValue().equals("/")) {
 			b = new Binary();
-			// TODO TO BE COMPLETED
+			b.term1 = e;
+			b.op = new Operator(token.getValue());
+			token = input.nextToken();
+			b.term2 = negation();
 			e = b;
 		}
 		return e;
@@ -269,9 +277,16 @@ public class ConcreteSyntax {
 			token = input.nextToken();
 		} else if (token.getType().equals("Literal")) {
 			Value v = null;
-			if (isInteger(token.getValue()))
-				v = new Value((new Integer(token.getValue())).intValue());
-			else if (token.getValue().equals("true"))
+			if (isInteger(token.getValue())) {
+				// The scanner accepts any number of digits, but a Value
+				// holds a Java int: a number that is too big is reported
+				// as a syntax error instead of crashing the parser
+				try {
+					v = new Value(Integer.parseInt(token.getValue()));
+				} catch (NumberFormatException ex) {
+					throw new RuntimeException(SyntaxError("Integer up to 2147483647"));
+				}
+			} else if (token.getValue().equals("true"))
 				v = new Value(true);
 			else if (token.getValue().equals("false"))
 				v = new Value(false);
